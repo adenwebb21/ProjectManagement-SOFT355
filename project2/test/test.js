@@ -1,7 +1,7 @@
 var chai = require("chai");
 var chaiHttp = require("chai-http");
 
-var app = require("../express-params").app;
+var app = require("../test").app;
 
 chai.use(chaiHttp); // Configure Chai.
 suite("Test the server", function()
