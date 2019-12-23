@@ -1,5 +1,6 @@
 // Import Mongoose and connect to the DB.
 var mongoose = require("mongoose");
+//var insertTasks = require("./db_insert_tasks");
 
 var uri = "mongodb+srv://user:user@adencluster-knyii.mongodb.net/test?retryWrites=true&w=majority";
 
@@ -23,13 +24,12 @@ app.get("/forbidden", function(request, response) {
 });
 
 app.get("/listtasks", function(request, response) {
-  // Find all students.
+  // Find all tasks.
   Task.find(function(err, tasks) {
     // Set the response header to indicate JSON content
     // and return the array of task data.
     response.setHeader("Content-Type", "application/json");
     response.send(tasks);
-    console.log(tasks.length);
   });
 });
 
@@ -47,21 +47,45 @@ app.get("/listtasks/:id", function(request, response) {
   });
 });
 
-app.get("/newtask", function(request, response) {
-  // UNFiniSHED
-  // TODO: FIx
-  var title = request.query.title;
-  var desc = request.query.desc;
+app.get("/newtask/:title/:desc", function(request, response) {
 
-  // Create a new student instance with the posted data.
-  var myStudent = new Student({name: studentName,
-  course: course});
-  myStudent.save(function(err) {
-  // Error handling here.
+  var id = 0;
+
+  Task.find(function(err, tasks) {
+    var numOfTasks = tasks.length;
+    var tempId = numOfTasks + 1;
+    id = tempId;
   });
-  response.send("Student successfully saved");
-});
 
+  var title = request.params.title;
+  var desc = request.params.desc;
+
+  insertCustomTask(id, title, desc);
+
+  var task = new Task({
+    "id": id,
+    "title": title,
+    "desc": desc,
+    "due": new Date("2020-01-12"),
+    "priority": 5
+  });
+
+  task.save();
+
+  console.log("current ID: " + id);
+  Task.findOne({"id": id}, function(err, task) {
+    if(task == null)
+    {
+      response.send("Invalid task!");
+      console.log("invalid task");
+    }
+    else {
+      response.setHeader("Content-Type", "application/json");
+      response.send(task);
+      console.log("sent correct data");
+    }
+  });
+});
 
 app.listen(9000, function()
 {

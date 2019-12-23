@@ -93,5 +93,12 @@ suite("Test the server", function()
     });
   });
 
-
+  // TODO: Add actual test here
+  test("Test adding new task", function()
+  {
+    chai.request('http://localhost:9000').get("/forbidden").end(function(err, res)
+    {
+      chai.assert.equal(res.status, 403);
+    });
+  });
 });
