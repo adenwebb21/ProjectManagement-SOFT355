@@ -18,24 +18,34 @@ app.use(function(req, res, next) {
   next();
 });
 
+app.get("/forbidden", function(request, response) {
+  response.Status = "403 Forbidden";
+});
 
 app.get("/listtasks", function(request, response) {
   // Find all students.
   Task.find(function(err, tasks) {
     // Set the response header to indicate JSON content
-    // and return the array of student data.
+    // and return the array of task data.
     response.setHeader("Content-Type", "application/json");
     response.send(tasks);
+    console.log(tasks.length);
   });
 });
 
 app.get("/listtasks/:id", function(request, response) {
   Task.findOne({"id": request.params.id}, function(err, task) {
-    response.setHeader("Content-Type", "application/json");
-    response.send(task);
+    if(task == null)
+    {
+      response.send("Invalid task!");
+    }
+    else {
+      response.setHeader("Content-Type", "application/json");
+      response.send(task);
+    }
+
   });
 });
-
 
 app.get("/newtask", function(request, response) {
   // UNFiniSHED
