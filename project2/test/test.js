@@ -93,12 +93,12 @@ suite("Test the server", function()
     });
   });
 
-  // TODO: Add actual test here
+// TODO: add proper functional test
   test("Test adding new task", function()
   {
-    chai.request('http://localhost:9000').get("/forbidden").end(function(err, res)
+    chai.request('http://localhost:9000').get("/newtask/test1/test1Desc").end(function(err, res)
     {
-      chai.assert.equal(res.status, 403);
+      chai.assert.equal(res.status, 200);
     });
   });
 });

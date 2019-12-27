@@ -6,9 +6,13 @@ var uri = "mongodb+srv://user:user@adencluster-knyii.mongodb.net/test?retryWrite
 
 mongoose.connect(uri, {useNewUrlParser: true});
 
+mongoose.set('useFindAndModify', false);
+
 var Task = mongoose.model("Task", {id: Number, title: String, desc: String, due: Date, priority: Number});
 
 module.exports.Task = Task;
+
+var id = 0;
 
 // Import Express and initialise the application.
 express = require("express");
@@ -47,33 +51,61 @@ app.get("/listtasks/:id", function(request, response) {
   });
 });
 
-app.get("/newtask/:title/:desc", function(request, response) {
+app.get("/newtask/:title/:desc/:due/:priority", function(request, response) {
 
-  var id = 0;
+  var query = Task.find();
 
-  Task.find(function(err, tasks) {
+  var promise = query.exec();
+
+  promise.then(function (tasks)
+  {
     var numOfTasks = tasks.length;
-    var tempId = numOfTasks + 1;
+    var tempId = numOfTasks;
     id = tempId;
+
+    console.log("Task ID: " + id);
+
+    var title = request.params.title;
+    var desc = request.params.desc;
+    var due = request.params.due;
+    var priority = request.params.priority;
+
+    var task = new Task({
+      "id": id,
+      "title": title,
+      "desc": desc,
+      "due": due,
+      "priority": priority
+    });
+
+    var promise = task.save();
+
+    promise.then(function (doc)
+    {
+      console.log("Searching for ID: " + id);
+      Task.findOne({"id": id}, function(err, task) {
+        if(task == null)
+        {
+          response.send("Invalid task!");
+          console.log("invalid task");
+        }
+        else {
+          response.setHeader("Content-Type", "application/json");
+          response.send(task);
+          console.log("sent correct data");
+        }
+      });
+    });
   });
+});
 
-  var title = request.params.title;
-  var desc = request.params.desc;
+app.get("/removetask/:id/", function(request, response) {
 
-  insertCustomTask(id, title, desc);
+  var tempId = request.params.id
+  tempId = tempId.substring(1, tempId.length);
 
-  var task = new Task({
-    "id": id,
-    "title": title,
-    "desc": desc,
-    "due": new Date("2020-01-12"),
-    "priority": 5
-  });
-
-  task.save();
-
-  console.log("current ID: " + id);
-  Task.findOne({"id": id}, function(err, task) {
+  console.log("Searching for task to remove: " + tempId);
+  Task.findOne({"id": tempId}, function(err, task) {
     if(task == null)
     {
       response.send("Invalid task!");
@@ -81,8 +113,10 @@ app.get("/newtask/:title/:desc", function(request, response) {
     }
     else {
       response.setHeader("Content-Type", "application/json");
-      response.send(task);
-      console.log("sent correct data");
+      response.send("Task removed");
+      task.remove();
+
+      console.log("removed task");
     }
   });
 });
