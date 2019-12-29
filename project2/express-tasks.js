@@ -9,8 +9,10 @@ mongoose.connect(uri, {useNewUrlParser: true});
 mongoose.set('useFindAndModify', false);
 
 var Task = mongoose.model("Task", {id: Number, title: String, desc: String, due: Date, priority: Number});
+var Column = mongoose.model("Column", {id: Number, title: String, position: Number, tasks: [Number]});
 
 module.exports.Task = Task;
+module.exports.Column = Column;
 
 var id = 0;
 
@@ -37,6 +39,16 @@ app.get("/listtasks", function(request, response) {
   });
 });
 
+app.get("/listcolumns", function(request, response) {
+  // Find all columns.
+  Column.find(function(err, columns) {
+    // Set the response header to indicate JSON content
+    // and return the array of column data.
+    response.setHeader("Content-Type", "application/json");
+    response.send(columns);
+  });
+});
+
 app.get("/listtasks/:id", function(request, response) {
   Task.findOne({"id": request.params.id}, function(err, task) {
     if(task == null)
@@ -49,6 +61,38 @@ app.get("/listtasks/:id", function(request, response) {
     }
 
   });
+});
+
+app.get("/listcolumns/:id", function(request, response) {
+  Column.findOne({"id": request.params.id}, function(err, column) {
+    if(column == null)
+    {
+      response.send("Invalid task!");
+    }
+    else {
+      response.setHeader("Content-Type", "application/json");
+      response.send(column);
+    }
+
+  });
+});
+
+app.get("/listcolumns/bytask/:id", function(request, response) {
+
+  var query = Column.findOne({"tasks": request.params.id});
+  var promise = query.exec();
+
+  promise.then(function(column)
+  {
+    if(column == null)
+    {
+      response.send("Invalid task!");
+    }
+    else {
+      response.setHeader("Content-Type", "application/json");
+      response.send(column);
+    }
+  })
 });
 
 app.get("/newtask/:title/:desc/:due/:priority", function(request, response) {
@@ -115,6 +159,33 @@ app.get("/removetask/:id/", function(request, response) {
       response.setHeader("Content-Type", "application/json");
       response.send("Task removed");
       task.remove();
+
+      console.log("removed task");
+    }
+  });
+});
+
+app.get("/removetaskfromcol/:id/", function(request, response) {
+
+  var tempId = request.params.id
+  tempId = tempId.substring(1, tempId.length);
+
+  console.log("Searching for task to remove: " + tempId);
+  Column.findOne({"tasks": tempId}, function(err, column) {
+    if(column == null)
+    {
+      response.send("Invalid task!");
+      console.log("invalid task");
+    }
+    else {
+      var idx = column.tasks ? column.tasks.indexOf(tempId) : -1;
+      console.log("IDX: " + idx);
+      column.tasks.splice(idx, 1);
+
+      response.setHeader("Content-Type", "application/json");
+      response.send("Task removed");
+
+      column.save();
 
       console.log("removed task");
     }

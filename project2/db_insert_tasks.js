@@ -15,5 +15,44 @@ for (i = 0; i < 10; i++)
     "priority": 5
   });
 
+  var intitialToDoTasks = [0, 1, 2, 3];
+  var initialDoingTasks = [4, 5, 6, 7];
+  var initialDoneTasks = [8, 9];
+
+  console.log(intitialToDoTasks);
+  console.log(initialDoingTasks);
+  console.log(initialDoneTasks);
+
   task.save();
+}
+
+for (var i = 0; i < 3; i++)
+{
+  var columnTitle;
+  var arrayOfTasks;
+
+  if(i == 0)
+  {
+    columnTitle = "To-Do";
+    arrayOfTasks = intitialToDoTasks;
+  }
+  else if(i == 1)
+  {
+    columnTitle = "Doing";
+    arrayOfTasks = initialDoingTasks;
+  }
+  else if(i == 2)
+  {
+    columnTitle = "Done";
+    arrayOfTasks = initialDoneTasks;
+  }
+
+  var column = new expressTasks.Column({
+    "id": i,
+    "title": columnTitle,
+    "position": i,
+    "tasks": arrayOfTasks
+  });
+
+  column.save();
 }

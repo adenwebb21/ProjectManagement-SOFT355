@@ -1,25 +1,57 @@
 var highestId = 0;
+var tasks = [];
+
+//$(function()
+//{
+    //$.get("http://localhost:9000/listtasks", {}, function(res) {
+      //let data = res;
+      //var columnName = "";
+
+      //for (var i = 0; i < data.length; i++) {
+        //tasks[i] = data[i];
+
+        //console.log(tasks);
+
+        //$.get("http://localhost:9000/listcolumns/bytask/" + tasks[i].id).done(function(res)
+        //{
+          //columnName = res.title;
+          //var divId = "div" + tasks[i].id;
+          //$("#" + columnName).append("<div id=" + divId + ">");
+          //$("#" + divId).append("<p>" + "ID: " + tasks[i].id);
+          //$("#" + divId).append("<p>" + "Title: " + tasks[i].title);
+          //$("#" + divId).append("<p>" + "Description: " + tasks[i].desc);
+          //$("#" + divId).append("<p>" + "Priority: " + tasks[i].priority);
+          //$("#" + divId).append("<p>" + "Due Date: " + tasks[i].due);
+          //$("#" + divId).append('<button name="removebtn" id="' + tasks[i].id + '" type="button">Remove</button><br><br>');
+        //});
+      //}
+  //});
+//});
 
 $(function()
 {
-    $.get("http://localhost:9000/listtasks", {}, function(res) {
+    $.get("http://localhost:9000/listcolumns").done(function(res){
       let data = res;
-      let tasks = [];
+      let columns = [];
+
+      console.log(data);
 
       for (var i = 0; i < data.length; i++) {
-        tasks[i] = data[i];
-        var divId = "div" + tasks[i].id;
-        $("#test").append("<div id=" + divId + ">");
-        $("#" + divId).append("<p>" + "ID: " + tasks[i].id);
-        $("#" + divId).append("<p>" + "Title: " + tasks[i].title);
-        $("#" + divId).append("<p>" + "Description: " + tasks[i].desc);
-        $("#" + divId).append("<p>" + "Priority: " + tasks[i].priority);
-        $("#" + divId).append("<p>" + "Due Date: " + tasks[i].due);
-        $("#" + divId).append('<button name="removebtn" id="' + tasks[i].id + '" type="button">Remove</button><br><br>');
+        columns[i] = data[i];
 
-        if(i > highestId)
+        for (var j = 0; j < columns[i].tasks.length; j++)
         {
-          highestId = i;
+          $.get("http://localhost:9000/listtasks/" + columns[i].tasks[j]).done(function(res)
+          {
+            var divId = "div" + res.id;
+            $("#To-Do").append("<div id=" + divId + ">");
+            $("#" + divId).append("<p>" + "ID: " + res.id);
+            $("#" + divId).append("<p>" + "Title: " + res.title);
+            $("#" + divId).append("<p>" + "Description: " + res.desc);
+            $("#" + divId).append("<p>" + "Priority: " + res.priority);
+            $("#" + divId).append("<p>" + "Due Date: " + res.due);
+            $("#" + divId).append('<button name="removebtn" id="' + res.id + '" type="button">Remove</button><br><br>');
+          });
         }
       }
   });
@@ -47,7 +79,7 @@ $(document).ready(function()
           let data = res;
 
           var divId = "div" + data.id;
-          $("#test").append("<div id=" + divId + ">");
+          $("#To-Do").append("<div id=" + divId + ">");
           $("#" + divId).append("<p>" + "ID: " + data.id);
           $("#" + divId).append("<p>" + "Title: " + data.title);
           $("#" + divId).append("<p>" + "Description: " + data.desc);
@@ -55,8 +87,6 @@ $(document).ready(function()
           $("#" + divId).append("<p>" + "Due Date: " + data.due);
           $("#" + divId).append('<button name="removebtn" id="' + data.id + '" type="button">Remove</button><br><br>');
         });
-
-        highestId++;
       }
       else {
         alert("incomplete fields");
@@ -67,6 +97,7 @@ $(document).ready(function()
 $(document).on('click', 'button[name ="removebtn"]', function()
 {
   var id = $(this).attr('id');
+  $.get("http://localhost:9000/removetaskfromcol/:" + id, {}, function(res) {});
   $.get("http://localhost:9000/removetask/:" + id, {}, function(res) {});
   $("#div" + id).remove();
 
