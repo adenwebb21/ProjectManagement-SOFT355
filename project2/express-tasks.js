@@ -143,6 +143,47 @@ app.get("/newtask/:title/:desc/:due/:priority", function(request, response) {
   });
 });
 
+app.get("/movetasktoright/:id/", function(request, response) {
+
+  var tempId = request.params.id
+  tempId = tempId.substring(1, tempId.length);
+
+  console.log("Searching for task to move: " + tempId);
+  Column.findOne({"tasks": tempId}, function(err, column) {
+    if(column == null)
+    {
+      response.send("Invalid column!");
+      console.log("invalid column");
+    }
+    else
+    {
+      if(column.id < 2)
+      {
+        var idx = column.tasks ? column.tasks.indexOf(tempId) : -1;
+        console.log("IDX: " + idx);
+        column.tasks.splice(idx, 1);
+
+        column.tasks.splice(0, 0, tempId);
+
+        response.setHeader("Content-Type", "application/json");
+        response.send("Task moved");
+
+        column.save();
+
+        console.log("removed task");
+      }
+      else {
+        response.setHeader("Content-Type", "application/json");
+        response.send("Task not moved");
+
+        console.log("task not moved");
+      }
+
+
+    }
+  });
+});
+
 app.get("/removetask/:id/", function(request, response) {
 
   var tempId = request.params.id

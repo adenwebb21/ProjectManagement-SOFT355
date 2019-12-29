@@ -51,6 +51,7 @@ $(function()
             $("#" + divId).append("<p>" + "Priority: " + res.priority);
             $("#" + divId).append("<p>" + "Due Date: " + res.due);
             $("#" + divId).append('<button name="removebtn" id="' + res.id + '" type="button">Remove</button><br><br>');
+            $("#" + divId).append('<button name="movebtn" id="' + res.id + '" type="button">Move Right</button><br><br>');
           });
         }
       }
@@ -86,6 +87,7 @@ $(document).ready(function()
           $("#" + divId).append("<p>" + "Priority: " + data.priority);
           $("#" + divId).append("<p>" + "Due Date: " + data.due);
           $("#" + divId).append('<button name="removebtn" id="' + data.id + '" type="button">Remove</button><br><br>');
+          $("#" + divId).append('<button name="movebtn" id="' + data.id + '" type="button">Move Right</button><br><br>');
         });
       }
       else {
@@ -100,5 +102,12 @@ $(document).on('click', 'button[name ="removebtn"]', function()
   $.get("http://localhost:9000/removetaskfromcol/:" + id, {}, function(res) {});
   $.get("http://localhost:9000/removetask/:" + id, {}, function(res) {});
   $("#div" + id).remove();
+
+});
+
+$(document).on('click', 'button[name ="movebtn"]', function()
+{
+  var id = $(this).attr('id');
+  // TODO: make the task move!!
 
 });
