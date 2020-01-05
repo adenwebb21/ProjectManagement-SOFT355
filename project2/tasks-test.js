@@ -1,60 +1,29 @@
 var highestId = 0;
 var tasks = [];
-
-//$(function()
-//{
-    //$.get("http://localhost:9000/listtasks", {}, function(res) {
-      //let data = res;
-      //var columnName = "";
-
-      //for (var i = 0; i < data.length; i++) {
-        //tasks[i] = data[i];
-
-        //console.log(tasks);
-
-        //$.get("http://localhost:9000/listcolumns/bytask/" + tasks[i].id).done(function(res)
-        //{
-          //columnName = res.title;
-          //var divId = "div" + tasks[i].id;
-          //$("#" + columnName).append("<div id=" + divId + ">");
-          //$("#" + divId).append("<p>" + "ID: " + tasks[i].id);
-          //$("#" + divId).append("<p>" + "Title: " + tasks[i].title);
-          //$("#" + divId).append("<p>" + "Description: " + tasks[i].desc);
-          //$("#" + divId).append("<p>" + "Priority: " + tasks[i].priority);
-          //$("#" + divId).append("<p>" + "Due Date: " + tasks[i].due);
-          //$("#" + divId).append('<button name="removebtn" id="' + tasks[i].id + '" type="button">Remove</button><br><br>');
-        //});
-      //}
-  //});
-//});
+var data = [];
 
 $(function()
 {
-    $.get("http://localhost:9000/listcolumns").done(function(res){
-      let data = res;
-      let columns = [];
-
-      console.log(data);
-
-      for (var i = 0; i < data.length; i++) {
-        columns[i] = data[i];
-
-        for (var j = 0; j < columns[i].tasks.length; j++)
+    $.getJSON("http://localhost:9000/listtasks", {}, function(res)
+    {
+      $.each(res, function(index)
+      {
+        $.getJSON("http://localhost:9000/listcolumns/bytask/" + res[index].id).done(function(column)
         {
-          $.get("http://localhost:9000/listtasks/" + columns[i].tasks[j]).done(function(res)
-          {
-            var divId = "div" + res.id;
-            $("#To-Do").append("<div id=" + divId + ">");
-            $("#" + divId).append("<p>" + "ID: " + res.id);
-            $("#" + divId).append("<p>" + "Title: " + res.title);
-            $("#" + divId).append("<p>" + "Description: " + res.desc);
-            $("#" + divId).append("<p>" + "Priority: " + res.priority);
-            $("#" + divId).append("<p>" + "Due Date: " + res.due);
-            $("#" + divId).append('<button name="removebtn" id="' + res.id + '" type="button">Remove</button><br><br>');
-            $("#" + divId).append('<button name="movebtn" id="' + res.id + '" type="button">Move Right</button><br><br>');
-          });
-        }
-      }
+          var tempTask = res[index];
+          columnName = column.title;
+          console.log("Column name is: " + columnName);
+          var divId = "div" + tempTask.id;
+
+          $("#" + columnName).append("<div id=" + divId + ">");
+          $("#" + divId).append("<p>" + "ID: " + tempTask.id);
+          $("#" + divId).append("<p>" + "Title: " + tempTask.title);
+          $("#" + divId).append("<p>" + "Description: " + tempTask.desc);
+          $("#" + divId).append("<p>" + "Priority: " + tempTask.priority);
+          $("#" + divId).append("<p>" + "Due Date: " + tempTask.due);
+          $("#" + divId).append('<button name="removebtn" id="' + tempTask.id + '" type="button">Remove</button><br><br>');
+        });
+      });
   });
 });
 
@@ -108,6 +77,6 @@ $(document).on('click', 'button[name ="removebtn"]', function()
 $(document).on('click', 'button[name ="movebtn"]', function()
 {
   var id = $(this).attr('id');
-  // TODO: make the task move!!
+  $.get("http://localhost:9000/movetasktoright/:" + id, {}, function(res) {});
 
 });

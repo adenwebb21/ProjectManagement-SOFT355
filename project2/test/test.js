@@ -16,7 +16,6 @@ suite("Test the server", function()
     chai.request('http://localhost:9000').get("/listtasks/").end(function(err, res)
     {
       chai.assert.isArray(res.body);
-      chai.assert.lengthOf(res.body, 10);
       chai.assert.property(res.body[0], 'id');
       chai.assert.property(res.body[0], 'title');
       chai.assert.property(res.body[0], 'desc');
@@ -96,7 +95,7 @@ suite("Test the server", function()
 // TODO: add proper functional test
   test("Test adding new task", function()
   {
-    chai.request('http://localhost:9000').get("/newtask/test1/test1Desc").end(function(err, res)
+    chai.request('http://localhost:9000').get("/newtask/test1/test1Desc/task1DueDate/2").end(function(err, res)
     {
       chai.assert.equal(res.status, 200);
     });
