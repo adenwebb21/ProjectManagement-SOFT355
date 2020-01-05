@@ -6,12 +6,41 @@
     <script type="text/javascript" src="tasks-test.js"></script>
     <title></title>
     <style>
+      .task
+      {
+        background-color: #424242;
+        color: #fff;
+        padding: 10px;
+        margin-bottom: 5px;
+      }
+
+      #To-Do-Container
+      {
+        background-color: #efefef;
+        color: #000;
+        float: left;
+        margin: 10px;
+      }
+      #Doing-Container
+      {
+        background-color: #efefef;
+        color: #000;
+        float: left;
+        margin: 10px;
+      }
+      #Done-Container
+      {
+        background-color: #efefef;
+        color: #000;
+        float: left;
+        margin: 10px;
+      }
+
     	#To-Do
     	{
     		background-color: #efefef;
     		color: #000;
     		float: left;
-        padding: 20px;
         margin: 10px;
     	}
     	#Doing
@@ -19,7 +48,6 @@
     		background-color: #efefef;
     		color: #000;
     		float: left;
-        padding: 20px;
         margin: 10px;
     	}
       #Done
@@ -27,7 +55,6 @@
     		background-color: #efefef;
     		color: #000;
     		float: left;
-        padding: 20px;
         margin: 10px;
     	}
     </style>
@@ -45,20 +72,28 @@
       </form>
       <button id="newtask" type="button">Create new task</button>
     </div>
-    <div id="test">
-    </div>
 
-    <div id="To-Do">
+    <div id="To-Do-Container">
       <h1>To-Do</h1>
+      <div id="To-Do">
+
+      </div>
     </div>
 
-    <div id="Doing">
+    <div id="Doing-Container">
       <h1>Doing</h1>
+      <div id="Doing">
+
+      </div>
     </div>
 
-    <div id="Done">
+    <div id="Done-Container">
       <h1>Done</h1>
+      <div id="Done">
+
+      </div>
     </div>
+
 
   </body>
 </html>

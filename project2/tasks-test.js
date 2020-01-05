@@ -15,13 +15,15 @@ $(function()
           console.log("Column name is: " + columnName);
           var divId = "div" + tempTask.id;
 
-          $("#" + columnName).append("<div id=" + divId + ">");
+          $("#" + columnName).append("<div class='task' id=" + divId + ">");
           $("#" + divId).append("<p>" + "ID: " + tempTask.id);
           $("#" + divId).append("<p>" + "Title: " + tempTask.title);
           $("#" + divId).append("<p>" + "Description: " + tempTask.desc);
           $("#" + divId).append("<p>" + "Priority: " + tempTask.priority);
           $("#" + divId).append("<p>" + "Due Date: " + tempTask.due);
           $("#" + divId).append('<button name="removebtn" id="' + tempTask.id + '" type="button">Remove</button><br><br>');
+          $("#" + divId).append('<button name="movebtn_r" id="' + tempTask.id + '" type="button">Move Right</button><br><br>');
+          $("#" + divId).append('<button name="movebtn_l" id="' + tempTask.id + '" type="button">Move Left</button><br><br>');
         });
       });
   });
@@ -49,14 +51,15 @@ $(document).ready(function()
           let data = res;
 
           var divId = "div" + data.id;
-          $("#To-Do").append("<div id=" + divId + ">");
+          $("#To-Do").prepend("<div class='task' id=" + divId + ">");
           $("#" + divId).append("<p>" + "ID: " + data.id);
           $("#" + divId).append("<p>" + "Title: " + data.title);
           $("#" + divId).append("<p>" + "Description: " + data.desc);
           $("#" + divId).append("<p>" + "Priority: " + data.priority);
           $("#" + divId).append("<p>" + "Due Date: " + data.due);
           $("#" + divId).append('<button name="removebtn" id="' + data.id + '" type="button">Remove</button><br><br>');
-          $("#" + divId).append('<button name="movebtn" id="' + data.id + '" type="button">Move Right</button><br><br>');
+          $("#" + divId).append('<button name="movebtn_r" id="' + data.id + '" type="button">Move Right</button><br><br>');
+          $("#" + divId).append('<button name="movebtn_l" id="' + data.id + '" type="button">Move Left</button><br><br>');
         });
       }
       else {
@@ -74,9 +77,91 @@ $(document).on('click', 'button[name ="removebtn"]', function()
 
 });
 
-$(document).on('click', 'button[name ="movebtn"]', function()
+$(document).on('click', 'button[name ="movebtn_r"]', function()
 {
   var id = $(this).attr('id');
-  $.get("http://localhost:9000/movetasktoright/:" + id, {}, function(res) {});
 
+  $.getJSON("http://localhost:9000/increment_column/:" + id).done(function(newColumn) {
+
+    if(newColumn != "Task not moved")
+    {
+      console.log("The new column is " + newColumn.title);
+
+      $.get("http://localhost:9000/listtasks/" + id).done(function(task) {
+
+        if(task != "Invalid task!")
+        {
+          console.log("The new task is " + task.id);
+
+          var divId = "div" + task.id;
+          $("#" + newColumn.title).prepend("<div class='task' id=" + divId + ">");
+          $("#" + divId).append("<p>" + "ID: " + task.id);
+          $("#" + divId).append("<p>" + "Title: " + task.title);
+          $("#" + divId).append("<p>" + "Description: " + task.desc);
+          $("#" + divId).append("<p>" + "Priority: " + task.priority);
+          $("#" + divId).append("<p>" + "Due Date: " + task.due);
+          $("#" + divId).append('<button name="removebtn" id="' + task.id + '" type="button">Remove</button><br><br>');
+          $("#" + divId).append('<button name="movebtn_r" id="' + task.id + '" type="button">Move Right</button><br><br>');
+          $("#" + divId).append('<button name="movebtn_l" id="' + task.id + '" type="button">Move Left</button><br><br>');
+
+          $("#" + divId).fadeOut('normal', function(){
+              $("#" + divId).fadeIn();
+          });
+        }
+        else {
+          console.log("Task ID was not valid");
+        }
+
+      });
+
+      $("#div" + id).remove();
+    }
+    else {
+
+    }
+  });
+});
+
+$(document).on('click', 'button[name ="movebtn_l"]', function()
+{
+  var id = $(this).attr('id');
+  $.getJSON("http://localhost:9000/decrement_column/:" + id).done(function(newColumn) {
+
+    if(newColumn != "Task not moved")
+    {
+      console.log("The new column is " + newColumn.title);
+
+      $.get("http://localhost:9000/listtasks/" + id).done(function(task) {
+
+        if(task != "Invalid task!")
+        {
+          console.log("The new task is " + task.id);
+
+          var divId = "div" + task.id;
+          $("#" + newColumn.title).prepend("<div class='task' id=" + divId + ">");
+          $("#" + divId).append("<p>" + "ID: " + task.id);
+          $("#" + divId).append("<p>" + "Title: " + task.title);
+          $("#" + divId).append("<p>" + "Description: " + task.desc);
+          $("#" + divId).append("<p>" + "Priority: " + task.priority);
+          $("#" + divId).append("<p>" + "Due Date: " + task.due);
+          $("#" + divId).append('<button name="removebtn" id="' + task.id + '" type="button">Remove</button><br><br>');
+          $("#" + divId).append('<button name="movebtn_r" id="' + task.id + '" type="button">Move Right</button><br><br>');
+          $("#" + divId).append('<button name="movebtn_l" id="' + task.id + '" type="button">Move Left</button><br><br>');
+
+          $("#" + divId).fadeOut('normal', function(){
+              $("#" + divId).fadeIn();
+          });
+        }
+        else {
+          console.log("Task ID was not valid");
+        }
+
+      });
+
+      $("#div" + id).remove();
+    }
+    else {
+
+    }
+  });
 });
