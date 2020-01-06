@@ -10,9 +10,11 @@ mongoose.set('useFindAndModify', false);
 
 var Task = mongoose.model("Task", {id: Number, title: String, desc: String, due: Date, priority: Number});
 var Column = mongoose.model("Column", {id: Number, title: String, position: Number, tasks: [Number]});
+var Board = mongoose.model("Board", {id: Number, title: String, code: Number, columns: [Column]});
 
 module.exports.Task = Task;
 module.exports.Column = Column;
+module.exports.Board = Board;
 
 var id = 0;
 

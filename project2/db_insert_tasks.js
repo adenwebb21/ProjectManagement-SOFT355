@@ -5,6 +5,8 @@ var uri = "mongodb+srv://user:user@adencluster-knyii.mongodb.net/test?retryWrite
 
 mongoose.connect(uri, {useNewUrlParser: true});
 
+var createdColumns = [];
+
 for (i = 0; i < 10; i++)
 {
   var task = new expressTasks.Task({
@@ -55,4 +57,14 @@ for (var i = 0; i < 3; i++)
   });
 
   column.save();
+  createdColumns[i] = column;
 }
+
+var board = new expressTasks.Board({
+  "id": 0,
+  "title": "Board 1",
+  "code": 1234,
+  "columns": createdColumns
+});
+
+board.save();
