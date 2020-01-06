@@ -1,17 +1,23 @@
 var highestId = 0;
 var board;
 var allTasks = [];
+var currentColumns = [];
 var data = [];
 
 $(function()
 {
   GetAllTasks();
-  $.each(allTasks, function(index)
-  {
-    $.getJSON("http://localhost:9000/listcolumns/bytask/" + res[index].id).done(function(column)
-    {
-      var tempTask = res[index];
-      columnName = column.title;
+});
+
+function PopulateFromBoard()
+{
+  console.log("POPULATING FROM BOARD");
+  $.each(currentColumns, function(columnIndex){
+    $.each(currentColumns[columnIndex].tasks, function(taskIndex){
+      console.log("Tasks array" + currentColumns[columnIndex].tasks);
+      var tempTask = allTasks[taskIndex];
+      console.log(tempTask);
+      var columnName = currentColumns[columnIndex].title;
       console.log("Column name is: " + columnName);
       var divId = "div" + tempTask.id;
 
@@ -26,7 +32,7 @@ $(function()
       $("#" + divId).append('<button name="movebtn_l" id="' + tempTask.id + '" type="button">Move Left</button><br><br>');
     });
   });
-});
+}
 
 function GetAllTasks()
 {
@@ -34,6 +40,22 @@ function GetAllTasks()
     allTasks = tasks;
     console.log("Retrieved all tasks" + allTasks.length);
   });
+}
+
+function GetColumns(columns)
+{
+  $.each(columns, function(i){
+    $.get("http://localhost:9000/listcolumns/" + columns[i] + "/").done(function(col) {
+      currentColumns[i] = col;
+      console.log(currentColumns[i]);
+    });
+  });
+
+  setTimeout(function(){
+    PopulateFromBoard();
+  }, 1000);
+
+
 }
 
 $(document).ready(function()
@@ -51,10 +73,11 @@ $(document).ready(function()
       {
         var code = $('#code').val();
 
-        $.get("http://localhost:9000/getboard/" + code + "/", {}, function(res) {
-          board = res;
-          window.location.href = "tasks-test.html";
+        $.get("http://localhost:9000/getboard/" + code + "/").done(function(res) {
+          GetColumns(res.columns);
         });
+
+
       }
       else {
         alert("incomplete fields");

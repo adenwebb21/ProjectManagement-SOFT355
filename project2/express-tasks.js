@@ -32,11 +32,18 @@ app.get("/forbidden", function(request, response) {
 });
 
 app.get("/getboard/:passcode", function(request, response) {
-  Board.find({"code": request.params.passcode}, function(err, board) {
+  console.log("The requested passcode is: " + request.params.passcode);
+  var query = Board.findOne({"code": request.params.passcode});
+  var promise = query.exec();
+
+  promise.then(function(board) {
+    console.log("Found board: " + board);
     response.setHeader("Content-Type", "application/json");
     response.send(board);
   });
 });
+
+
 
 app.get("/listtasks", function(request, response) {
   // Find all tasks.
@@ -77,7 +84,7 @@ app.get("/listcolumns/:id", function(request, response) {
   Column.findOne({"id": request.params.id}, function(err, column) {
     if(column == null)
     {
-      response.send("Invalid task!");
+      response.send("Invalid column!");
     }
     else {
       response.setHeader("Content-Type", "application/json");
