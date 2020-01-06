@@ -1,32 +1,65 @@
 var highestId = 0;
-var tasks = [];
+var board;
+var allTasks = [];
 var data = [];
 
 $(function()
 {
-    $.getJSON("http://localhost:9000/listtasks", {}, function(res)
+  GetAllTasks();
+  $.each(allTasks, function(index)
+  {
+    $.getJSON("http://localhost:9000/listcolumns/bytask/" + res[index].id).done(function(column)
     {
-      $.each(res, function(index)
-      {
-        $.getJSON("http://localhost:9000/listcolumns/bytask/" + res[index].id).done(function(column)
-        {
-          var tempTask = res[index];
-          columnName = column.title;
-          console.log("Column name is: " + columnName);
-          var divId = "div" + tempTask.id;
+      var tempTask = res[index];
+      columnName = column.title;
+      console.log("Column name is: " + columnName);
+      var divId = "div" + tempTask.id;
 
-          $("#" + columnName).append("<div class='task' id=" + divId + ">");
-          $("#" + divId).append("<p>" + "ID: " + tempTask.id);
-          $("#" + divId).append("<p>" + "Title: " + tempTask.title);
-          $("#" + divId).append("<p>" + "Description: " + tempTask.desc);
-          $("#" + divId).append("<p>" + "Priority: " + tempTask.priority);
-          $("#" + divId).append("<p>" + "Due Date: " + tempTask.due);
-          $("#" + divId).append('<button name="removebtn" id="' + tempTask.id + '" type="button">Remove</button><br><br>');
-          $("#" + divId).append('<button name="movebtn_r" id="' + tempTask.id + '" type="button">Move Right</button><br><br>');
-          $("#" + divId).append('<button name="movebtn_l" id="' + tempTask.id + '" type="button">Move Left</button><br><br>');
-        });
-      });
+      $("#" + columnName).append("<div class='task' id=" + divId + ">");
+      $("#" + divId).append("<p>" + "ID: " + tempTask.id);
+      $("#" + divId).append("<p>" + "Title: " + tempTask.title);
+      $("#" + divId).append("<p>" + "Description: " + tempTask.desc);
+      $("#" + divId).append("<p>" + "Priority: " + tempTask.priority);
+      $("#" + divId).append("<p>" + "Due Date: " + tempTask.due);
+      $("#" + divId).append('<button name="removebtn" id="' + tempTask.id + '" type="button">Remove</button><br><br>');
+      $("#" + divId).append('<button name="movebtn_r" id="' + tempTask.id + '" type="button">Move Right</button><br><br>');
+      $("#" + divId).append('<button name="movebtn_l" id="' + tempTask.id + '" type="button">Move Left</button><br><br>');
+    });
   });
+});
+
+function GetAllTasks()
+{
+  $.getJSON("http://localhost:9000/listtasks", {}, function(tasks){
+    allTasks = tasks;
+    console.log("Retrieved all tasks" + allTasks.length);
+  });
+}
+
+$(document).ready(function()
+{
+    $("#submitCode").click(function()
+    {
+      var valid = true;
+
+      if($('#code').val() == "")
+      {
+        valid = false;
+      }
+
+      if(valid)
+      {
+        var code = $('#code').val();
+
+        $.get("http://localhost:9000/getboard/" + code + "/", {}, function(res) {
+          board = res;
+          window.location.href = "tasks-test.html";
+        });
+      }
+      else {
+        alert("incomplete fields");
+      }
+    });
 });
 
 $(document).ready(function()

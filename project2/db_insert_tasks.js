@@ -57,7 +57,7 @@ for (var i = 0; i < 3; i++)
   });
 
   column.save();
-  createdColumns[i] = column;
+  createdColumns[i] = column.id;
 }
 
 var board = new expressTasks.Board({

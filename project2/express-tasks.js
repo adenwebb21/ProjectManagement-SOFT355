@@ -10,7 +10,7 @@ mongoose.set('useFindAndModify', false);
 
 var Task = mongoose.model("Task", {id: Number, title: String, desc: String, due: Date, priority: Number});
 var Column = mongoose.model("Column", {id: Number, title: String, position: Number, tasks: [Number]});
-var Board = mongoose.model("Board", {id: Number, title: String, code: Number, columns: [Column]});
+var Board = mongoose.model("Board", {id: Number, title: String, code: Number, columns: [Number]});
 
 module.exports.Task = Task;
 module.exports.Column = Column;
@@ -29,6 +29,13 @@ app.use(function(req, res, next) {
 
 app.get("/forbidden", function(request, response) {
   response.Status = "403 Forbidden";
+});
+
+app.get("/getboard/:passcode", function(request, response) {
+  Board.find({"code": request.params.passcode}, function(err, board) {
+    response.setHeader("Content-Type", "application/json");
+    response.send(board);
+  });
 });
 
 app.get("/listtasks", function(request, response) {
