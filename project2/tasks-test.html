@@ -14,21 +14,7 @@
         margin-bottom: 5px;
       }
 
-      #To-Do-Container
-      {
-        background-color: #efefef;
-        color: #000;
-        float: left;
-        margin: 10px;
-      }
-      #Doing-Container
-      {
-        background-color: #efefef;
-        color: #000;
-        float: left;
-        margin: 10px;
-      }
-      #Done-Container
+      .Column
       {
         background-color: #efefef;
         color: #000;
@@ -36,30 +22,21 @@
         margin: 10px;
       }
 
-    	#To-Do
-    	{
-    		background-color: #efefef;
-    		color: #000;
-    		float: left;
+      .Container
+      {
+        background-color: #efefef;
+        color: #000;
+        float: left;
         margin: 10px;
-    	}
-    	#Doing
-    	{
-    		background-color: #efefef;
-    		color: #000;
-    		float: left;
-        margin: 10px;
-    	}
-      #Done
-    	{
-    		background-color: #efefef;
-    		color: #000;
-    		float: left;
-        margin: 10px;
-    	}
+      }
     </style>
   </head>
   <body>
+    <!--<div>
+      Enter your new board title here: <input id="newTitle" type="text"><br>
+      Enter your new board code here: <input id="newCode" type="text"><br>
+      <button id="createBoard" type="button">Create Board</button>
+    </div> -->
     <div>
       Enter your board code here: <input id="code" type="text"><br>
       <button id="submitCode" type="button">Submit Code</button>
@@ -76,27 +53,34 @@
       </form>
       <button id="newtask" type="button">Create new task</button>
     </div>
+    <div>
+      Title: <input id="columnTitle" type="text" value="Title"><br>
+      <button id="newColumn" type="button">Create new column</button>
+    </div>
 
-    <div id="To-Do-Container">
-      <h1>To-Do</h1>
-      <div id="To-Do">
+    <div class="Columns">
+      <div class="Container">
+        <h1>To-Do</h1>
+        <div class = "Column" id="To-Do">
 
+        </div>
+      </div>
+
+      <div class="Container">
+        <h1>Doing</h1>
+        <div class = "Column" id="Doing">
+
+        </div>
+      </div>
+
+      <div class="Container">
+        <h1>Done</h1>
+        <div class = "Column" id="Done">
+
+        </div>
       </div>
     </div>
 
-    <div id="Doing-Container">
-      <h1>Doing</h1>
-      <div id="Doing">
-
-      </div>
-    </div>
-
-    <div id="Done-Container">
-      <h1>Done</h1>
-      <div id="Done">
-
-      </div>
-    </div>
 
 
   </body>

@@ -37,13 +37,96 @@ app.get("/getboard/:passcode", function(request, response) {
   var promise = query.exec();
 
   promise.then(function(board) {
-    console.log("Found board: " + board);
-    response.setHeader("Content-Type", "application/json");
-    response.send(board);
+    if(board != null)
+    {
+      console.log("Found board: " + board);
+      response.setHeader("Content-Type", "application/json");
+      response.send(board);
+    }
+    else {
+      response.send("no board found");
+    }
+
   });
 });
 
+app.get("/createboard/:title/:passcode/:columns", function(request, response) {
+  var query = Board.find();
 
+  var promise = query.exec();
+
+  promise.then(function (boards)
+  {
+    var numOfBoards = boards.length;
+    var tempId = numOfBoards;
+
+    var title = request.params.title;
+    var code = request.params.passcode;
+    var columns = request.params.columns;
+
+    var board = new Board({
+      "id": tempId,
+      "title": title,
+      "code": code,
+      "columns": columns
+    });
+
+    var promise = board.save();
+
+    promise.then(function (doc)
+    {
+      Board.findOne({"id": tempId}, function(err, board) {
+        if(board == null)
+        {
+          response.send("Invalid board!");
+        }
+        else {
+          response.setHeader("Content-Type", "application/json");
+          response.send(board);
+        }
+      });
+    });
+  });
+});
+
+app.get("/createcolumn/:title/", function(request, response) {
+  var query = Column.find();
+
+  var promise = query.exec();
+
+  promise.then(function (columns)
+  {
+    var numOfColumns = columns.length;
+    var tempId = numOfColumns;
+
+    var title = request.params.title;
+    var position = numOfColumns;
+    var tasks = [];
+
+    var column = new Column({
+      "id": tempId,
+      "title": title,
+      "position": position,
+      "tasks": tasks
+    });
+
+    var promise = column.save();
+
+    promise.then(function (doc)
+    {
+      Column.findOne({"id": tempId}, function(err, column) {
+        if(column == null)
+        {
+          response.send("Invalid column!");
+        }
+        else {
+          response.setHeader("Content-Type", "application/json");
+          response.send(column);
+        }
+      });
+    });
+  });
+});
 
 app.get("/listtasks", function(request, response) {
   // Find all tasks.
