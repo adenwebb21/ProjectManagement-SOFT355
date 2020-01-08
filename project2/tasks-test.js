@@ -235,8 +235,11 @@ $(document).on('click', 'button[name ="removebtn"]', function()
   var id = $(this).attr('id');
   $.get("http://localhost:9000/removetaskfromcol/:" + id, {}, function(res) {});
   $.get("http://localhost:9000/removetask/:" + id, {}, function(res) {});
-  $("#div" + id).remove();
 
+
+  $("#div" + id).fadeOut('fast', function(){
+    $("#div" + id).remove();
+  });
 });
 
 $(document).on('click', 'button[name ="movebtn_r"]', function()
