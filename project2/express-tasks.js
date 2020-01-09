@@ -420,6 +420,7 @@ app.get("/removetaskfromcol/:id/", function(request, response) {
   var tempId = request.params.id
   tempId = tempId.substring(1, tempId.length);
 
+
   console.log("Searching for task to remove: " + tempId);
   Column.findOne({"tasks": tempId}, function(err, column) {
     if(column == null)

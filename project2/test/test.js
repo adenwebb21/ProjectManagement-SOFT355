@@ -22,19 +22,6 @@ suite("Test the server", function()
       chai.assert.property(res.body[0], 'due');
       chai.assert.property(res.body[0], 'priority');
     });
-
-    chai.request('http://localhost:9000').get("/listtasks/").end(function(err, res)
-    {
-      chai.assert.equal(res.body[0].id, 0);
-      chai.assert.equal(res.body[0].title, 'Task 0');
-      chai.assert.equal(res.body[0].desc, "This is the description for task 0");
-      chai.assert.equal(res.body[0].priority, 5);
-
-      chai.assert.equal(res.body[5].id, 5);
-      chai.assert.equal(res.body[5].title, 'Task 5');
-      chai.assert.equal(res.body[5].desc, "This is the description for task 5");
-      chai.assert.equal(res.body[5].priority, 5);
-    });
   });
 
   test("Test /listtasks/0 endpoint", function()
@@ -92,10 +79,21 @@ suite("Test the server", function()
     });
   });
 
-// TODO: add proper functional test
   test("Test adding new task", function()
   {
-    chai.request('http://localhost:9000').get("/newtask/test1/test1Desc/task1DueDate/2").end(function(err, res)
+    chai.request('http://localhost:9000').get("/newtask/test1/test1Desc/2020-01-12T00:00:00.000Z/2").end(function(err, res)
+    {
+      chai.assert.equal(res.status, 200);
+      chai.assert.equal(res.body.title, "test1");
+      chai.assert.equal(res.body.desc, "test1Desc");
+      chai.assert.equal(res.body.due, "2020-01-12T00:00:00.000Z");
+      chai.assert.equal(res.body.priority, 2);
+    });
+  });
+
+  test("Test removing task", function()
+  {
+    chai.request('http://localhost:9000').get("/removetask/:10").end(function(err, res)
     {
       chai.assert.equal(res.status, 200);
     });
