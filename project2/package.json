@@ -1,0 +1,20 @@
+{
+  "name": "projmanagement",
+  "version": "1.0.0",
+  "description": "soft355",
+  "main": "express-tasks.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
