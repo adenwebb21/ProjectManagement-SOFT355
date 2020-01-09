@@ -29,6 +29,17 @@
         float: left;
         margin: 10px;
       }
+
+      #boardCode {
+        margin: 10px;
+        padding: 10px;
+      }
+
+      #newTaskButtons {
+        margin: 10px;
+        padding: 10px;
+      }
+
     </style>
   </head>
   <body>
@@ -37,22 +48,25 @@
       Enter your new board code here: <input id="newCode" type="text"><br>
       <button id="createBoard" type="button">Create Board</button>
     </div> -->
-    <div>
-      Enter your board code here: <input id="code" type="text"><br>
-      <button id="submitCode" type="button">Submit Code</button>
+    <div class="">
+      <div id="boardCode">
+        Enter your board code here: <input id="code" type="text"><br>
+        <button id="submitCode" type="button">Submit Code</button>
+      </div>
+      <div id="newTaskButtons">
+        Title: <input id="title" type="text" value="Title"><br>
+        Description: <input id="desc" type="text" value="Description"><br>
+        Due date: <input type="date" id="due"><br>
+        Priority:
+        <form>
+          <input type="radio" name="priority" value="3"> High
+          <input type="radio" name="priority" value="2"> Medium
+          <input type="radio" name="priority" value="1"> Low
+        </form>
+        <button id="newtask" type="button">Create new task</button>
+      </div>
     </div>
-    <div>
-      Title: <input id="title" type="text" value="Title"><br>
-      Description: <input id="desc" type="text" value="Description"><br>
-      Due date: <input type="date" id="due"><br>
-      Priority:
-      <form>
-        <input type="radio" name="priority" value="3"> High
-        <input type="radio" name="priority" value="2"> Medium
-        <input type="radio" name="priority" value="1"> Low
-      </form>
-      <button id="newtask" type="button">Create new task</button>
-    </div>
+    <br>
     <!--<div>
       Title: <input id="columnTitle" type="text" value="Title"><br>
       <button id="newColumn" type="button">Create new column</button>
